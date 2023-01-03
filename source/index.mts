@@ -1,3 +1,5 @@
+import timers from "node:timers/promises";
+
 export async function time(
   title: string,
   function_: (() => void) | (() => Promise<void>)
@@ -16,4 +18,36 @@ if (process.env.TEST === "@leafac/node") {
     let sum = 0;
     for (let number = 0; number < 1_000_000; number++) sum += number;
   });
+}
+
+export function eventLoopActive(): Promise<void> {
+  return new Promise<void>((resolve) => {
+    const abortController = new AbortController();
+    timers
+      .setInterval(1 << 30, undefined, {
+        signal: abortController.signal,
+      })
+      [Symbol.asyncIterator]()
+      .next()
+      .catch(() => {});
+    for (const event of [
+      "exit",
+      "SIGHUP",
+      "SIGINT",
+      "SIGQUIT",
+      "SIGTERM",
+      "SIGUSR2",
+      "SIGBREAK",
+    ])
+      process.on(event, () => {
+        abortController.abort();
+        resolve();
+      });
+  });
+}
+
+if (process.env.TEST === "@leafac/node" && process.stdin.isTTY) {
+  console.log("eventLoopActive(): Press ⌃C to continue");
+  await eventLoopActive();
+  console.log("eventLoopActive(): Cleaning up");
 }
