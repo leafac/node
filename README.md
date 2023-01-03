@@ -1,8 +1,7 @@
 # ⚠️ WORK IN PROGRESS ⚠️
 
 <!--
-- Check if the file is being imported or executed.
-- Promise to keep the event loop active.
+- Find places in projects in which these utilities should be used.
 - Boilerplate for application (spinning up multiple processes, and so forth).
 - Build system.
 -->

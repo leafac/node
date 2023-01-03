@@ -1,4 +1,7 @@
 import timers from "node:timers/promises";
+import url from "node:url";
+import fs from "node:fs/promises";
+import assert from "node:assert/strict";
 
 export async function time(
   title: string,
@@ -49,5 +52,15 @@ export function eventLoopActive(): Promise<void> {
 if (process.env.TEST === "@leafac/node" && process.stdin.isTTY) {
   console.log("eventLoopActive(): Press ⌃C to continue");
   await eventLoopActive();
-  console.log("eventLoopActive(): Cleaning up");
+  console.log("eventLoopActive(): Continuing…");
+}
+
+export async function isExecuted(importMetaUrl: string): Promise<boolean> {
+  return (
+    url.fileURLToPath(importMetaUrl) === (await fs.realpath(process.argv[1]))
+  );
+}
+
+if (process.env.TEST === "@leafac/node") {
+  assert(isExecuted(import.meta.url));
 }
