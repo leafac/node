@@ -9,7 +9,7 @@ export async function time(
 ) {
   const start = process.hrtime.bigint();
   await function_();
-  time.report(title, (process.hrtime.bigint() - start) / 1_000_000n);
+  time.report(title, elapsedTime(start));
 }
 
 time.report = (title: string, time: bigint): void => {
