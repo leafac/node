@@ -23,6 +23,17 @@ if (process.env.TEST === "@leafac/node") {
   });
 }
 
+export function elapsedTime(
+  start: bigint,
+  end: bigint = process.hrtime.bigint()
+): bigint {
+  return (end - start) / 1_000_000n;
+}
+
+if (process.env.TEST === "@leafac/node") {
+  assert.equal(elapsedTime(128020188396416n, 128041549262166n), 21360n);
+}
+
 export function eventLoopActive(): Promise<void> {
   return new Promise<void>((resolve) => {
     const abortController = new AbortController();
