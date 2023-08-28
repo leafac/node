@@ -24,11 +24,10 @@
   "types": "./build/index.d.mts",
   "scripts": {
     "prepare": "tsc",
-    "test": "prettier --check \"./README.md\" --check \"./package.json\" --check \"./source/**/*.mts\" --end-of-line auto && npm run prepare && cross-env TEST=@leafac/node node ./build/index.mjs"
+    "test": "prettier --check \"./README.md\" --check \"./package.json\" --check \"./source/**/*.mts\" --end-of-line auto && npm run prepare && node --test"
   },
   "devDependencies": {
     "@types/node": "^18.11.18",
-    "cross-env": "^7.0.3",
     "prettier": "^2.8.1",
     "typescript": "^4.9.4"
   },
