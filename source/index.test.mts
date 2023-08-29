@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import net from "node:net";
 import * as node from "./index.mjs";
 
 test("time()", async () => {
@@ -25,5 +26,22 @@ test("isExecuted()", async () => {
   assert(await node.isExecuted(import.meta.url));
   assert(
     !(await node.isExecuted(new URL("./index.mjs", import.meta.url).toString()))
+  );
+});
+
+test("portAvailable()", async () => {
+  const port = 9123;
+  assert(await node.portAvailable(port));
+  const server = net.createServer();
+  await new Promise<void>((resolve) =>
+    server.listen(port, () => {
+      resolve();
+    })
+  );
+  assert(!(await node.portAvailable(port)));
+  await new Promise<void>((resolve) =>
+    server.close(() => {
+      resolve();
+    })
   );
 });
