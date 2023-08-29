@@ -59,13 +59,16 @@ export async function isExecuted(importMetaUrl: string): Promise<boolean> {
 // - https://github.com/sindresorhus/get-port/blob/85c18678143f2c673bdaf5307971397b29ddf28b/index.js#L42-L54
 // - https://github.com/node-modules/detect-port/blob/9804ad50f49e3256e54ac40165b16fa6c2fa8d5a/lib/detect-port.js
 // - https://gist.github.com/timoxley/1689041
-export function portAvailable(port: number): Promise<boolean> {
+export function portAvailable(
+  port: number,
+  hostname?: string
+): Promise<boolean> {
   return new Promise((resolve) => {
     const server = net.createServer().unref();
     server.on("error", () => {
       resolve(false);
     });
-    server.listen(port, () => {
+    server.listen(port, hostname, () => {
       server.close(() => {
         resolve(true);
       });
